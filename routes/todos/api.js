@@ -48,6 +48,20 @@ router.route('/:id')
       return res.status(400).json({'status': 'fail', 'error': e});
     });
   })
+  .put(function(req, res, next) {
+    var todo = {};
+    var prop;
+    for (prop in req.body) {
+      todo[prop] = req.body[prop];
+    }
+    Todo.updateAsync({_id: req.params.id}, todo)
+    .then(function(updatedTodo) {
+      return res.json({'status': 'success', 'todo': updatedTodo});
+    })
+    .catch(function(e){
+      return res.status(400).json({'status': 'fail', 'error': e});
+    });
+  })
   .delete(function(req,res,next){
       Todo.findByIdAndRemove(req.params.id)
       .then(function(deletedTodo){

@@ -11,18 +11,18 @@ var addTodo = function() {
      },
      dataType: 'json',
      success: function(data) {
-       var todo = data.todo[0];
-       var newLiHtml = todoTemplate(todo);
-       $('form + ul').append(newLiHtml);
-       $('#add-todo-text').val('');
-     }
+        var todo = data.todo[0];
+        var newLiHtml = todoTemplate(todo);
+        $('form + ul').append(newLiHtml);
+        $('#add-todo-text').val('');
+ }
    });
  };
 
 var updateTodo = function(id, data, cb) {
   $.ajax({
     url: '/api/todos/'+id,
-    type: 'POST',
+    type: 'PUT',
     data: data,
     dataType: 'json',
     success: function(data) {
@@ -61,12 +61,12 @@ $(function() {
         }
     });
     $('ul').on('change', 'li :checkbox', function() {
-    var $this = $(this);
-    var $input = $this[0];
-    var $li = $this.parent();
-    var id = $li.attr('id');
-    var checked = $input.checked;
-    var data = { done: checked };
+    var $this = $(this),
+        $input = $this[0],
+        $li = $this.parent(),
+        id = $li.attr('id'),
+        checked = $input.checked,
+        data = { done: checked };
     updateTodo(id, data, function(d) {
       $this.next().toggleClass('checked');
     });
