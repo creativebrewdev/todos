@@ -7,3 +7,8 @@ body {
     list-style-type: none; }
     body ul .checked span {
       text-decoration: line-through; }
+    body ul a {
+      text-decoration: none;
+      cursor: pointer; }
+      body ul a:hover {
+        text-decoration: underline; }

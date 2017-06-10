@@ -13,5 +13,12 @@ body {
                 text-decoration: line-through;
             }
         }
+        a {
+            text-decoration: none;
+            cursor: pointer;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 }
