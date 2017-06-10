@@ -28,6 +28,10 @@ app.use(
   })
 )
 
+browserify.settings({
+  transform: ['hbsfy']
+});
+
 app.get('/javascripts/bundle.js', browserify('./client/script.js'));
 
 var dbConnectionString = process.env.MONGODB_URI || 'mongodb://localhost';
