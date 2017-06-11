@@ -11,7 +11,7 @@ var addTodo = function() {
      },
      dataType: 'json',
      success: function(data) {
-        var todo = data.todo[0];
+        var todo = data.todo;
         var newLiHtml = todoTemplate(todo);
         $('form + ul').append(newLiHtml);
         $('#add-todo-text').val('');
@@ -49,7 +49,26 @@ var deleteTodoLi = function($li) {
     $li.remove();
 };
 
+var initTodoObserver = function() {
+    var target = $('ul')[0];
+    var config = { attributes: true, childList: true, characterData: true };
+    var observer = new MutationObserver(function(mutationRecords){
+        $.each(mutationRecords, function(index, mutationRecord){
+            updateTodoCount();
+        });
+    });
+    if(target) {
+        observer.observe(target, config);
+    }
+    updateTodoCount();
+};
+
+var updateTodoCount = function() {
+    $(".count").text($("li").length);
+};
+
 $(function() {
+    initTodoObserver();
     $(":button").on('click', addTodo);
     $(":text").on('keypress', function(e) {
         var key = e.keyCode;
@@ -68,7 +87,7 @@ $(function() {
         checked = $input.checked,
         data = { done: checked };
     updateTodo(id, data, function(d) {
-      $this.next().toggleClass('checked');
+      $this.parent().toggleClass('checked');
     });
   });
   $('ul').on('keydown', 'li span', function(e){
@@ -101,5 +120,28 @@ $(function() {
       deleteTodo(id, function(e){
           deleteTodoLi($li);
       });
+  });
+  $('.filter').on('click', '.show-all', function(){
+      $('.hide').removeClass('hide');
+  });
+  $('.filter').on('click', '.show-not-done', function(){
+      $('.hide').removeClass('hide');
+      $('.checked').closest('li').addClass('hide');
+  });
+  $('.filter').on('click', '.show-done', function() {
+      $('li').addClass('hide');
+      $('.checked').closest('li').removeClass('hide');
+  });
+  $(".clear").on("click", function(){
+      var $doneLi = $(".checked").closest("li");
+      for (var i = 0; i < $doneLi.length; i++) {
+          var $li = $($doneLi[i]);
+          var id = $li.attr('id');
+          (function($li){
+              deleteTodo(id, function(){
+                  deleteTodoLi($li);
+              });
+          })($li);
+      }
   });
 });
